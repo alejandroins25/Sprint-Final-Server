@@ -1,4 +1,4 @@
-package cat.institutmarianao.gymwebserver.model;
+package cat.institutmarianao.gymwebserver.model.dto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class User implements Serializable {
     public static final String MONITOR = "MONITOR";
     public static final String RESPONSABLE = "RESPONSABLE";
 
-    public enum Role {
+    public enum Rol {
         MONITOR, RESPONSABLE
     }
 
@@ -64,14 +64,14 @@ public class User implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "rol")
-    private Role role;
+    private Rol rol;
 
     @Column(name = "isMonitor")
     private Boolean isMonitor;
     
     public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<SimpleGrantedAuthority> list = new ArrayList<>();
-		list.add(new SimpleGrantedAuthority("ROLE_" + getRole()));
+		list.add(new SimpleGrantedAuthority("ROLE_" + getRol()));
 		return list;
 	}
 
@@ -123,12 +123,12 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	public Role getRole() {
-		return role;
+	public Rol getRol() {
+		return rol;
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
+	public void setRol(Rol rol) {
+		this.rol = rol;
 	}
 
 	public Boolean getIsMonitor() {
@@ -139,12 +139,12 @@ public class User implements Serializable {
 		this.isMonitor = isMonitor;
 	}
 	
-	public User(String username, String passwd, String nombre, String email, Role role, Boolean isMonitor) {
+	public User(String username, String passwd, String nombre, String email, Rol rol, Boolean isMonitor) {
 		this.username = username;
 		this.passwd = passwd;
 		this.nombre = nombre;
 		this.email = email;
-		this.role = role;
+		this.rol = rol;
 		this.isMonitor = isMonitor;
 	}
     
