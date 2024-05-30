@@ -13,11 +13,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "usuarios")
@@ -37,8 +39,9 @@ public class User implements Serializable {
     public static final int MIN_PASSWORD = 10;
     public static final int MIN_DNI = 9;
 
-    @GeneratedValue
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Size(min = MIN_USERNAME, max = MAX_USERNAME)
@@ -75,13 +78,17 @@ public class User implements Serializable {
 		return list;
 	}
 
-	public Long getId() {
-		return id;
-	}
+    // Constructor sin argumentos añadido
+    public User() {
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
 	public String getUsername() {
 		return username;

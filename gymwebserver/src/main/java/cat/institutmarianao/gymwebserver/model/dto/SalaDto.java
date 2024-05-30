@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "salas")
-public class Sala implements Serializable {
+public class SalaDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -47,6 +47,6 @@ public class Sala implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "id_responsable")
-    private User idResponsable;
+    private UserDto idResponsable;
 
 }

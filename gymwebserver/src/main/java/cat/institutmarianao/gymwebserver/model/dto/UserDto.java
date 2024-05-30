@@ -21,14 +21,14 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "usuarios")
-public class User implements Serializable {
+public class UserDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     public static final String MONITOR = "MONITOR";
     public static final String RESPONSABLE = "RESPONSABLE";
 
-    public enum Rol {
+    public enum Role {
         MONITOR, RESPONSABLE
     }
 
@@ -63,8 +63,8 @@ public class User implements Serializable {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "rol")
-    private Rol rol;
+    @Column(name = "role")
+    private Role role;
 
     @Column(name = "isMonitor")
     private Boolean isMonitor;
@@ -75,13 +75,17 @@ public class User implements Serializable {
 		return list;
 	}
 
-	public Long getId() {
-		return id;
-	}
+    // Constructor sin argumentos añadido
+    public UserDto() {
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
 	public String getUsername() {
 		return username;
@@ -123,12 +127,12 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	public Rol getRol() {
-		return rol;
+	public Role getRol() {
+		return role;
 	}
 
-	public void setRol(Rol rol) {
-		this.rol = rol;
+	public void setRol(Role rol) {
+		this.role = rol;
 	}
 
 	public Boolean getIsMonitor() {
@@ -139,12 +143,12 @@ public class User implements Serializable {
 		this.isMonitor = isMonitor;
 	}
 	
-	public User(String username, String passwd, String nombre, String email, Rol rol, Boolean isMonitor) {
+	public UserDto(String username, String passwd, String nombre, String email, Role role, Boolean isMonitor) {
 		this.username = username;
 		this.passwd = passwd;
 		this.nombre = nombre;
 		this.email = email;
-		this.rol = rol;
+		this.role = role;
 		this.isMonitor = isMonitor;
 	}
     

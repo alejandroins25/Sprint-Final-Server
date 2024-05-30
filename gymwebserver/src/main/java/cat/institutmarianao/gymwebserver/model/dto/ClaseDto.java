@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "clases")
-public class Clase implements Serializable {
+public class ClaseDto implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
@@ -31,16 +31,16 @@ public class Clase implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "id_monitor")
-    private User monitor;
+    private UserDto monitor;
 
     @ManyToOne
     @JoinColumn(name = "id_categoria")
-    private Categoria categoria;
+    private CategoriaDto categoria;
 
     @ManyToOne
     @JoinColumn(name = "id_sala")
-    private Sala sala;
+    private SalaDto sala;
 
-    public Clase() {}
+    public ClaseDto() {}
 
 }
