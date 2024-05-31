@@ -35,8 +35,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getByUsername(@NotBlank String username) {
-		return userRepository.findById(username).orElseThrow(NotFoundException::new);
+	public User getById(@NotBlank Long id) {
+		return userRepository.findById(id).orElseThrow(NotFoundException::new);
+	}
+	
+	@Override
+	public User getByUsername(String username) {
+		return userRepository.findByUsername(username).orElseThrow(NotFoundException::new);
 	}
 
 	@Override
@@ -48,7 +53,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Validated(OnUserUpdate.class)
 	public User update(@NotNull @Valid User user) {
-		User dbUser = getByUsername(user.getUsername());
+		User dbUser = getById(user.getId());
 
 		if (user.getPasswd() != null) {
 			dbUser.setPasswd(user.getPasswd());
@@ -73,10 +78,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void deleteByUsername(@NotBlank String username) {
-		userRepository.deleteById(username);
+	public void deleteById(@NotBlank Long id) {
+		userRepository.deleteById(id);
 	}
 
-
+	@Override
+	public void deleteByUsername(@NotBlank String username) {
+		userRepository.deleteByUsername(username);
+		
+	}
 
 }
