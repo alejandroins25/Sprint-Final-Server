@@ -12,26 +12,25 @@ import lombok.EqualsAndHashCode;
 /* Lombok */
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class UserDto implements Serializable {
+public abstract class UserDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @EqualsAndHashCode.Include
-    private Long id;
+    protected String username;
 
-    private String username;
+    protected String passwd;
 
-    private String passwd;
+    protected String name;
 
-    private String nombre;
+    protected String dni;
 
-    private String dni;
+    protected String email;
+    
+    protected Integer age;
 
-    private String email;
-
-    private User.Role role;
-
-    private Boolean isMonitor;
+    protected User.Role role;
+    
+    protected String location;
 
     
 }

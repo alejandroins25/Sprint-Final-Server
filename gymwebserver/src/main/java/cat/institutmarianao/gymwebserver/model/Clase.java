@@ -1,7 +1,6 @@
 package cat.institutmarianao.gymwebserver.model;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,13 +9,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "clases")
+@Table(name = "classes")
 public class Clase implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -25,23 +26,27 @@ public class Clase implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
-
-    private Integer duracion;
-
-    private Timestamp fechaHora;
+    
+    @NotBlank
+    private String name;
+    
+    @NotNull
+    private Integer duration;
+    
+    @NotNull
+    private Integer valoration;
 
     @ManyToOne
-    @JoinColumn(name = "id_monitor")
+    @JoinColumn(name = "monitorId")
     private User monitor;
 
     @ManyToOne
-    @JoinColumn(name = "id_categoria")
+    @JoinColumn(name = "categoryId")
     private Categoria categoria;
 
     @ManyToOne
-    @JoinColumn(name = "id_sala")
+    @JoinColumn(name = "roomId")
     private Sala sala;
 
     public Clase() {}
-
 }

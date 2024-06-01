@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "categorias")
+@Table(name = "categories")
 public class Categoria implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,11 +24,14 @@ public class Categoria implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
-
+    
     @NotBlank
-    @Column(name = "nombre")
-    private String nombre;
+    @Column(name = "name")
+    private String name;
+    
+    @NotBlank
+    @Column(name = "description")
+    private String desc;
 
     public Categoria() {}
-
 }

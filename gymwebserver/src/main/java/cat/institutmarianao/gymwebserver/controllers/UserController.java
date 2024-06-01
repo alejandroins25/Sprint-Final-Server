@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cat.institutmarianao.gymwebserver.exception.ForbiddenException;
 import cat.institutmarianao.gymwebserver.model.User;
-import cat.institutmarianao.gymwebserver.model.convert.converter.UserToUserDtoConverter;
+import cat.institutmarianao.gymwebserver.model.dto.ClienteDto;
+import cat.institutmarianao.gymwebserver.model.dto.MonitorDto;
+import cat.institutmarianao.gymwebserver.model.dto.ResponsableDto;
 import cat.institutmarianao.gymwebserver.model.dto.UserDto;
 import cat.institutmarianao.gymwebserver.services.UserService;
 import cat.institutmarianao.gymwebserver.validation.groups.OnUserCreate;
@@ -34,14 +36,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-
-
-
 /* Swagger */
 @Tag(name = "User", description = "UserController API")
 /**/
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/users")
 @Validated
 public class UserController {
 	
@@ -54,15 +53,12 @@ public class UserController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	@Autowired
-	private UserToUserDtoConverter convertUserToDto;
-	
 	@Operation(summary = "Authenticate a user")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(content = {
             @Content(mediaType = "application/json", examples = {
                     @ExampleObject(value = "{\"username\":\"string\",\"password\":\"string\"}") }) })
     @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-            UserDto.class }, discriminatorProperty = "role")) }, description = "User authenticated ok")
+            ResponsableDto.class, MonitorDto.class, ClienteDto.class }, discriminatorProperty = "role")) }, description = "User authenticated ok")
     @ApiResponse(responseCode = "404", content = { @Content(mediaType = "application/json") }, description = "Resource not found")
     @PostMapping("/authenticate")
     public UserDto authenticate(@RequestBody Map<String, String> usernamePassword) {
@@ -79,16 +75,16 @@ public class UserController {
     @Operation(summary = "Find all users")
     @ApiResponse(responseCode = "200", content = {
             @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(oneOf = {
-                    UserDto.class }, discriminatorProperty = "role"))) }, description = "Users retrieved ok")
+            		ResponsableDto.class, MonitorDto.class, ClienteDto.class }, discriminatorProperty = "role"))) }, description = "Users retrieved ok")
     @GetMapping(value = "/find/all")
     public List<UserDto> findAll(@RequestParam(value = "roles", required = false) User.Role[] roles,
-                                 @RequestParam(value = "nombre", required = false) String nombre) {
+                                 @RequestParam(value = "name", required = false) String name) {
 
-        List<User> users = userService.findAll(roles, nombre);
+        List<User> users = userService.findAll(roles, name);
 
         List<UserDto> usersDto = new ArrayList<>(users.size());
         for (User user : users) {
-            UserDto userDto = convertUserToDto(user);
+            UserDto userDto = conversionService.convert(user, UserDto.class);
             usersDto.add(userDto);
         }
 
@@ -99,7 +95,7 @@ public class UserController {
 
     @Operation(summary = "Get user by username")
     @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-            UserDto.class }, discriminatorProperty = "role")) }, description = "User retrieved ok")
+    		ResponsableDto.class, MonitorDto.class, ClienteDto.class }, discriminatorProperty = "role")) }, description = "User retrieved ok")
     @ApiResponse(responseCode = "404", content = { @Content(mediaType = "application/json") }, description = "Resource not found")
     @GetMapping("/get/by/username/{username}")
     public UserDto findByUsername(@PathVariable("username") @NotBlank String username) {
@@ -112,27 +108,23 @@ public class UserController {
     @io.swagger.v3.oas.annotations.parameters.RequestBody(content = {
             @Content(mediaType = "application/json", schema = @Schema(oneOf = { UserDto.class }, discriminatorProperty = "role")) })
     @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-            UserDto.class }, discriminatorProperty = "role")) }, description = "User saved ok")
+    		ResponsableDto.class, MonitorDto.class, ClienteDto.class }, discriminatorProperty = "role")) }, description = "User saved ok")
     @PostMapping("/save")
     @Validated(OnUserCreate.class)
     public UserDto save(@RequestBody @Valid UserDto userDto) {
-        User user = conversionService.convert(userDto, User.class);
-        user.setPasswd(passwordEncoder.encode(userDto.getPasswd()));
-        return conversionService.convert(userService.save(user), UserDto.class);
+    	return conversionService.convert(userService.save(convertAndEncodePassword(userDto)), UserDto.class);
     }
 
     @Operation(summary = "Update a user")
     @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-            UserDto.class }, discriminatorProperty = "role")) }, description = "User updated ok")
+    		ResponsableDto.class, MonitorDto.class, ClienteDto.class }, discriminatorProperty = "role")) }, description = "User updated ok")
     @ApiResponse(responseCode = "404", content = { @Content(mediaType = "application/json") }, description = "Resource not found")
     @PutMapping("/update")
     @Validated(OnUserUpdate.class)
     public UserDto update(@RequestBody @Valid UserDto userDto) {
-        User user = conversionService.convert(userDto, User.class);
-        user.setPasswd(passwordEncoder.encode(userDto.getPasswd()));
-        return conversionService.convert(userService.update(user), UserDto.class);
+    	return conversionService.convert(userService.update(convertAndEncodePassword(userDto)), UserDto.class);
     }
-
+	
     @Operation(summary = "Delete a user by id")
     @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json") }, description = "User deleted ok")
     @DeleteMapping("/delete/by/id/{id}")
@@ -146,5 +138,14 @@ public class UserController {
     public void deleteByUsername(@PathVariable("username") @NotBlank String username) {
         userService.deleteByUsername(username);
     }
+    
+	private User convertAndEncodePassword(UserDto userDto) {
+
+		String rawPassword = userDto.getPasswd();
+		if (rawPassword != null) {
+			userDto.setPasswd(passwordEncoder.encode(rawPassword));
+		}
+		return conversionService.convert(userDto, User.class);
+	}
 
 }

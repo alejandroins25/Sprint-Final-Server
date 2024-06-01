@@ -5,12 +5,9 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@Entity
-/* Lombok */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @JsonTypeName("cliente")

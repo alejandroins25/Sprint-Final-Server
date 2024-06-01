@@ -7,8 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -17,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "salas")
+@Table(name = "rooms")
 public class Sala implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,27 +24,13 @@ public class Sala implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
-
+    
     @NotBlank
-    @Column(name = "categoria")
-    private String categoria;
-
+    @Column(name = "name")
+    private String name;
+    
     @NotBlank
-    @Column(name = "planta")
-    private String planta;
-
-    @NotBlank
-    @Column(name = "numero")
-    private String numero;
-
-    @Column(name = "nota")
-    private String nota;
-
-    @Column(name = "aforo")
-    private int aforo;
-
-    @ManyToOne
-    @JoinColumn(name = "id_responsable")
-    private User idResponsable;
+    @Column(name = "capacity")
+    private Integer capacity;
 
 }

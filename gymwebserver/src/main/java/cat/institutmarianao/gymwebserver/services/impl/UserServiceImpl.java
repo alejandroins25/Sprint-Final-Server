@@ -12,7 +12,7 @@ import cat.institutmarianao.gymwebserver.model.User;
 import cat.institutmarianao.gymwebserver.model.User.Role;
 import cat.institutmarianao.gymwebserver.repositories.UserRepository;
 import cat.institutmarianao.gymwebserver.services.UserService;
-import cat.institutmarianao.gymwebserver.specifications.UserWithFullName;
+import cat.institutmarianao.gymwebserver.specifications.UserWithDni;
 import cat.institutmarianao.gymwebserver.specifications.UserWithRole;
 import cat.institutmarianao.gymwebserver.validation.groups.OnUserCreate;
 import cat.institutmarianao.gymwebserver.validation.groups.OnUserUpdate;
@@ -28,8 +28,8 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepository;
 
 	@Override
-	public List<User> findAll(Role[] roles, String fullName) {
-		Specification<User> spec = Specification.where(new UserWithRole(roles)).and(new UserWithFullName(fullName));
+	public List<User> findAll(Role[] roles, String dni) {
+		Specification<User> spec = Specification.where(new UserWithRole(roles)).and(new UserWithDni(dni));
 		
 		return userRepository.findAll(spec);
 	}
@@ -58,8 +58,8 @@ public class UserServiceImpl implements UserService {
 		if (user.getPasswd() != null) {
 			dbUser.setPasswd(user.getPasswd());
 		}
-		if (user.getNombre() != null) {
-			dbUser.setNombre(user.getNombre());
+		if (user.getName() != null) {
+			dbUser.setName(user.getName());
 		}
 		if (user.getDni() != null) {
 			dbUser.setDni(user.getDni());
@@ -69,9 +69,6 @@ public class UserServiceImpl implements UserService {
 		}
 		if (user.getRole() != null) {
 			dbUser.setRole(user.getRole());
-		}
-		if (user.getIsMonitor() != null) {
-			dbUser.setIsMonitor(user.getIsMonitor());
 		}
 
 		return userRepository.saveAndFlush(dbUser);

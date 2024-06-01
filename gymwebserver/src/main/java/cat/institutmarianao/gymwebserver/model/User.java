@@ -27,21 +27,23 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="role", discriminatorType=DiscriminatorType.STRING)
-@Table(name = "usuarios")
+@Table(name = "users")
 public abstract class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public static final String MONITOR = "MONITOR";
-    public static final String RESPONSABLE = "RESPONSABLE";
-    public static final String CLIENTE = "CLIENTE";
+    public static final String monitor = "monitor";
+    public static final String responsable = "responsable";
+    public static final String cliente = "cliente";
 
     public enum Role {
-        MONITOR, RESPONSABLE, CLIENTE
+    	monitor, responsable, cliente
     }
 
     public static final int MIN_USERNAME = 2;
     public static final int MAX_USERNAME = 25;
+    public static final int MIN_AGE = 16;
+    public static final int MAX_AGE = 110;
     public static final int MIN_PASSWORD = 10;
     public static final int MIN_DNI = 9;
 
@@ -52,6 +54,7 @@ public abstract class User implements Serializable {
 
     @Size(min = MIN_USERNAME, max = MAX_USERNAME)
     @NotBlank
+    @Column(name = "username")
     private String username;
 
     @NotNull
@@ -60,8 +63,8 @@ public abstract class User implements Serializable {
     protected String passwd;
 
     @NotBlank
-    @Column(name = "nombre")
-    protected String nombre;
+    @Column(name = "name")
+    protected String name;
 
     @NotBlank
     @Column(name = "dni")
@@ -70,12 +73,14 @@ public abstract class User implements Serializable {
     @NotBlank
     @Column(name = "email")
     protected String email;
+    
+    @NotNull
+    @Size(min = MIN_AGE, max = MAX_AGE)
+    @Column(name = "age")
+    private Integer age;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "rol",insertable=false, updatable=false)
+    @Column(name = "role",insertable=false, updatable=false)
     protected Role role;
-
-    @Column(name = "isMonitor")
-    protected Boolean isMonitor;
     
 }

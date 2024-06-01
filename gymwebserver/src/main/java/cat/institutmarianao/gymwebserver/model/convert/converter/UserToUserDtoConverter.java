@@ -4,17 +4,14 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
+import cat.institutmarianao.gymwebserver.model.Cliente;
+import cat.institutmarianao.gymwebserver.model.Monitor;
 import cat.institutmarianao.gymwebserver.model.Responsable;
 import cat.institutmarianao.gymwebserver.model.User;
+import cat.institutmarianao.gymwebserver.model.dto.ClienteDto;
+import cat.institutmarianao.gymwebserver.model.dto.MonitorDto;
 import cat.institutmarianao.gymwebserver.model.dto.ResponsableDto;
 import cat.institutmarianao.gymwebserver.model.dto.UserDto;
-import cat.institutmarianao.shipmentsws.model.Company;
-import cat.institutmarianao.shipmentsws.model.Courier;
-import cat.institutmarianao.shipmentsws.model.LogisticsManager;
-import cat.institutmarianao.shipmentsws.model.Receptionist;
-import cat.institutmarianao.shipmentsws.model.dto.CourierDto;
-import cat.institutmarianao.shipmentsws.model.dto.LogisticsManagerDto;
-import cat.institutmarianao.shipmentsws.model.dto.ReceptionistDto;
 
 @Component
 public class UserToUserDtoConverter implements Converter<User, UserDto> {
@@ -22,42 +19,31 @@ public class UserToUserDtoConverter implements Converter<User, UserDto> {
 	@Override
 	public UserDto convert(User user) {
 		if (user instanceof Responsable responsable) {
-			ResponsableDto logisticsManagerDto = new ResponsableDto();
+			ResponsableDto responsableDto = new ResponsableDto();
 
-			copyCommonProperties(responsable, logisticsManagerDto);
+			copyCommonProperties(responsable, responsableDto);
 
-			logisticsManagerDto.setOfficeId(responsable.get().getId());
-			logisticsManagerDto.setPlace(responsable.getPlace());
-
-			logisticsManagerDto.setLocation(
-					String.format("%s (%s)", responsable.getOffice().getName(), responsable.getPlace()));
-
-			return logisticsManagerDto;
+			return responsableDto;
 		}
-		if (user instanceof Receptionist receptionist) {
-			ReceptionistDto receptionistDto = new ReceptionistDto();
+		if (user instanceof Monitor monitor) {
+			MonitorDto monitorDto = new MonitorDto();
 
-			copyCommonProperties(receptionist, receptionistDto);
+			copyCommonProperties(monitor, monitorDto);
 
-			receptionistDto.setOfficeId(receptionist.getOffice().getId());
-			receptionistDto.setPlace(receptionist.getPlace());
+			monitorDto.setSalaId(monitor.getSala().getId());
 
-			receptionistDto
-					.setLocation(String.format("%s (%s)", receptionist.getOffice().getName(), receptionist.getPlace()));
+			monitorDto
+					.setLocation(String.format("%s (%s)", monitor.getSala().getName()));
 
-			return receptionistDto;
+			return monitorDto;
 		}
-		if (user instanceof Courier courier) {
-			CourierDto courierDto = new CourierDto();
+		if (user instanceof Cliente cliente) {
+			ClienteDto clienteDto = new ClienteDto();
 
-			copyCommonProperties(courier, courierDto);
+			copyCommonProperties(cliente, clienteDto);
 
-			Company company = courier.getCompany();
-			courierDto.setCompanyId(company.getId());
 
-			courierDto.setLocation(company.getName());
-
-			return courierDto;
+			return clienteDto;
 		}
 		return null;
 	}
