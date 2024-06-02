@@ -27,7 +27,7 @@ public class SalaServiceImpl implements SalaService {
     }
 
     @Override
-    public Sala findById(@Positive Long id) {
+    public Sala getById(@Positive Long id) {
         return salaRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 

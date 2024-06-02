@@ -2,7 +2,6 @@ package cat.institutmarianao.gymwebserver.model.dto;
 
 import java.io.Serializable;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

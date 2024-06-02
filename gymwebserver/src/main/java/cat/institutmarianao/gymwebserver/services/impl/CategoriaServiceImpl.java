@@ -22,7 +22,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     private CategoriaRepository categoriaRepository;
 
     @Override
-    public List<Categoria> getAllCategories() {
+    public List<Categoria> findAll() {
         return categoriaRepository.findAll();
     }
 

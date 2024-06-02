@@ -14,6 +14,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -43,7 +45,7 @@ public abstract class User implements Serializable {
     public static final int MIN_USERNAME = 2;
     public static final int MAX_USERNAME = 25;
     public static final int MIN_AGE = 16;
-    public static final int MAX_AGE = 110;
+    public static final int MAX_AGE = 100;
     public static final int MIN_PASSWORD = 10;
     public static final int MIN_DNI = 9;
 
@@ -75,12 +77,12 @@ public abstract class User implements Serializable {
     protected String email;
     
     @NotNull
-    @Size(min = MIN_AGE, max = MAX_AGE)
+    @Min(MIN_AGE)@Max(MAX_AGE)
     @Column(name = "age")
-    private Integer age;
+    private int age;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role",insertable=false, updatable=false)
+    @Column(name = "role", insertable = false, updatable = false)
     protected Role role;
     
 }

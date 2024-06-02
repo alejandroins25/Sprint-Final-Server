@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 /* Lombok */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Responsable extends User implements Serializable{
+public class Responsable extends Monitor implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 

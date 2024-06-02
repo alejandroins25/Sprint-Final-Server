@@ -112,8 +112,11 @@ public class UserController {
     @PostMapping("/save")
     @Validated(OnUserCreate.class)
     public UserDto save(@RequestBody @Valid UserDto userDto) {
-    	return conversionService.convert(userService.save(convertAndEncodePassword(userDto)), UserDto.class);
+    	User user = conversionService.convert(userDto, User.class);
+        User savedUser = userService.save(user);
+        return conversionService.convert(savedUser, UserDto.class);
     }
+   
 
     @Operation(summary = "Update a user")
     @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json", schema = @Schema(oneOf = {

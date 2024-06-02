@@ -30,11 +30,6 @@ public class UserToUserDtoConverter implements Converter<User, UserDto> {
 
 			copyCommonProperties(monitor, monitorDto);
 
-			monitorDto.setSalaId(monitor.getSala().getId());
-
-			monitorDto
-					.setLocation(String.format("%s (%s)", monitor.getSala().getName()));
-
 			return monitorDto;
 		}
 		if (user instanceof Cliente cliente) {

@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @JsonTypeName("responsable")
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
-public class ResponsableDto extends UserDto implements Serializable{
+public class ResponsableDto extends MonitorDto implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 

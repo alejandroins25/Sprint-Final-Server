@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -26,6 +27,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
 	@Override
 	public List<User> findAll(Role[] roles, String dni) {
@@ -47,6 +51,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Validated(OnUserCreate.class)
 	public User save(@NotNull @Valid User user) {
+		user.setPasswd(passwordEncoder.encode(user.getPasswd()));
 		return userRepository.saveAndFlush(user);
 	}
 

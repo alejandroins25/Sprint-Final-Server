@@ -20,6 +20,11 @@ public class GymwebaApplication {
 	protected PasswordEncoder encoder() {
 		return new BCryptPasswordEncoder();
 	}
+	
+    @Bean
+    BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 	public static void main(String[] args) {
 		SpringApplication.run(GymwebaApplication.class, args);

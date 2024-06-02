@@ -37,15 +37,15 @@ public class Clase implements Serializable {
     private Integer valoration;
 
     @ManyToOne
-    @JoinColumn(name = "monitorId")
+    @JoinColumn(name = "monitor_id")
     private User monitor;
 
     @ManyToOne
-    @JoinColumn(name = "categoryId")
+    @JoinColumn(name = "category_id")
     private Categoria categoria;
 
     @ManyToOne
-    @JoinColumn(name = "roomId")
+    @JoinColumn(name = "room_id")
     private Sala sala;
 
     public Clase() {}

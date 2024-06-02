@@ -2,6 +2,9 @@ package cat.institutmarianao.gymwebserver.model.dto;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import cat.institutmarianao.gymwebserver.model.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -12,6 +15,12 @@ import lombok.EqualsAndHashCode;
 /* Lombok */
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = MonitorDto.class, name = "monitor"),
+    @JsonSubTypes.Type(value = ClienteDto.class, name = "cliente"),
+    @JsonSubTypes.Type(value = ResponsableDto.class, name = "responsable")
+})
 public abstract class UserDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,11 +35,8 @@ public abstract class UserDto implements Serializable {
 
     protected String email;
     
-    protected Integer age;
+    protected int age;
 
     protected User.Role role;
-    
-    protected String location;
-
     
 }

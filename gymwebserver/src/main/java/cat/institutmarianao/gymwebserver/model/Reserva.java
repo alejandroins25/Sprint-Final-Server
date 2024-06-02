@@ -28,11 +28,11 @@ public class Reserva implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "classId")
+    @JoinColumn(name = "class_id")
     private Clase clase;
     
     @NotNull
