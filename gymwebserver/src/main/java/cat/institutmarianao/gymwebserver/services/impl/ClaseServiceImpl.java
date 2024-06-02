@@ -27,7 +27,7 @@ public class ClaseServiceImpl implements ClaseService {
     }
 
     @Override
-    public Clase findById(@Positive Long id) {
+    public Clase getById(@Positive Long id) {
         return claseRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
@@ -37,7 +37,7 @@ public class ClaseServiceImpl implements ClaseService {
     }
 
     @Override
-    public void delete(@NotBlank Long id) {
+    public void deleteById(@NotBlank Long id) {
         claseRepository.deleteById(id);
     }
 }

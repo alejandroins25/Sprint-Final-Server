@@ -22,5 +22,5 @@ public interface UserService {
 	
 	void deleteByUsername(@NotBlank String username);
 
-	User getByUsername(String string);
+	User getByUsername(@NotBlank String username);
 }

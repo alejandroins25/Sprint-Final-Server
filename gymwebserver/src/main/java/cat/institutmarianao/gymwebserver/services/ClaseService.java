@@ -3,14 +3,17 @@ package cat.institutmarianao.gymwebserver.services;
 import java.util.List;
 
 import cat.institutmarianao.gymwebserver.model.Clase;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 public interface ClaseService {
 	
     List<Clase> findAll();
     
-    Clase findById(Long id);
+    Clase getById(@Positive Long id);
     
-    Clase save(Clase clase);
+    Clase save(@Valid Clase clase);
     
-    void delete(Long id);
+    void deleteById(@NotBlank Long id);
 }
