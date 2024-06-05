@@ -11,7 +11,7 @@ import cat.institutmarianao.gymwebserver.model.Reserva;
 import cat.institutmarianao.gymwebserver.repositories.ReservaRepository;
 import cat.institutmarianao.gymwebserver.services.ReservaService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 @Validated
@@ -27,7 +27,7 @@ public class ReservaServiceImpl implements ReservaService {
     }
 
     @Override
-    public Reserva findById(@Positive Long id) {
+    public Reserva getById(@NotNull @Positive Long id) {
         return reservaRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
@@ -37,7 +37,7 @@ public class ReservaServiceImpl implements ReservaService {
     }
 
     @Override
-    public void deleteById(@NotBlank Long id) {
+    public void deleteById(@NotNull Long id) {
         reservaRepository.deleteById(id);
     }
 }

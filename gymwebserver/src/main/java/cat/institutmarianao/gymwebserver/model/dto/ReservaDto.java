@@ -1,8 +1,11 @@
 package cat.institutmarianao.gymwebserver.model.dto;
 
 import java.io.Serializable;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,10 +20,12 @@ public class ReservaDto implements Serializable {
     @EqualsAndHashCode.Include
     private Long id;
 
-    private UserDto user;
+    private Long user;
 
-    private ClaseDto clase;
+    private Long clase;
     
+    @Column(name = "date_time")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp dateTime;
 
     public ReservaDto() {}

@@ -13,39 +13,22 @@ import cat.institutmarianao.gymwebserver.model.dto.MonitorDto;
 import cat.institutmarianao.gymwebserver.model.dto.ResponsableDto;
 import cat.institutmarianao.gymwebserver.model.dto.UserDto;
 
-
-
 @Component
 public class UserDtoToUserConverter implements Converter<UserDto, User> {
 
-	@Override
-	public User convert(UserDto userDto) {
-		if (userDto instanceof ResponsableDto responsableDto) {
-			// Includes Supervisor
-			Responsable responsable = new Responsable();
-			copyCommonProperties(responsableDto, responsable);
-
-			return responsable;
-		}
-		if (userDto instanceof MonitorDto monitorDto) {
-			Monitor monitor = new Monitor();
-			copyCommonProperties(monitorDto, monitor);
-
-			// TODO Copy office
-			return monitor;
-		}
-		if (userDto instanceof ClienteDto clienteDto) {
-			// Includes Supervisor
-			Cliente cliente = new Cliente();
-			copyCommonProperties(clienteDto, cliente);
-
-			// TODO Copy company
-			return cliente;
-		}
-		return null;
-	}
-
-	private void copyCommonProperties(UserDto userDto, User user) {
-		BeanUtils.copyProperties(userDto, user);
-	}
+    @Override
+    public User convert(UserDto userDto) {
+        User user = null;
+        if (userDto instanceof ResponsableDto) {
+            user = new Responsable();
+        } else if (userDto instanceof MonitorDto) {
+            user = new Monitor();
+        } else if (userDto instanceof ClienteDto) {
+            user = new Cliente();
+        }
+        if (user != null) {
+            BeanUtils.copyProperties(userDto, user);
+        }
+        return user;
+    }
 }

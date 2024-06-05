@@ -2,8 +2,6 @@ package cat.institutmarianao.gymwebserver.model.dto;
 
 import java.io.Serializable;
 
-import cat.institutmarianao.gymwebserver.model.Categoria;
-import cat.institutmarianao.gymwebserver.model.Sala;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,11 +22,11 @@ public class ClaseDto implements Serializable {
     
     private Integer valoration;
 
-    private String monitor;
+    private Long monitor;
 
-    private Categoria categoria;
+    private Long categoria;
 
-    private Sala sala;
+    private Long sala;
 
     public ClaseDto() {}
 

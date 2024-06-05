@@ -3,15 +3,18 @@ package cat.institutmarianao.gymwebserver.services;
 import java.util.List;
 
 import cat.institutmarianao.gymwebserver.model.Reserva;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public interface ReservaService {
 
     List<Reserva> findAll();
 
-    Reserva findById(Long id);
+    Reserva getById(@NotNull @Positive Long id);
 
-    Reserva save(Reserva reserva);
+    Reserva save(@Valid Reserva reserva);
 
-    void deleteById(Long id);
+    void deleteById(@NotNull Long id);
 
 }

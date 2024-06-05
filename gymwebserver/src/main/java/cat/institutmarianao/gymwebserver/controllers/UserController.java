@@ -3,9 +3,12 @@ package cat.institutmarianao.gymwebserver.controllers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,6 +39,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 /* Swagger */
 @Tag(name = "User", description = "UserController API")
 /**/
@@ -103,6 +107,17 @@ public class UserController {
         User user = userService.getByUsername(username);
         return conversionService.convert(user, UserDto.class);
     }
+    
+    @Operation(summary = "Get user by id")
+    @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json", schema = @Schema(oneOf = {
+    		ResponsableDto.class, MonitorDto.class, ClienteDto.class }, discriminatorProperty = "role")) }, description = "User retrieved ok")
+    @ApiResponse(responseCode = "404", content = { @Content(mediaType = "application/json") }, description = "Resource not found")
+    @GetMapping("/get/by/id/{id}")
+    public UserDto findById(@PathVariable("id") @NotNull Long id) {
+
+        User user = userService.getById(id);
+        return conversionService.convert(user, UserDto.class);
+    }
 
     @Operation(summary = "Save a user")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(content = {
@@ -120,18 +135,47 @@ public class UserController {
 
     @Operation(summary = "Update a user")
     @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-    		ResponsableDto.class, MonitorDto.class, ClienteDto.class }, discriminatorProperty = "role")) }, description = "User updated ok")
+            ResponsableDto.class, MonitorDto.class, ClienteDto.class }, discriminatorProperty = "role")) }, description = "User updated ok")
     @ApiResponse(responseCode = "404", content = { @Content(mediaType = "application/json") }, description = "Resource not found")
-    @PutMapping("/update")
+    @PutMapping("/update/{id}")
     @Validated(OnUserUpdate.class)
-    public UserDto update(@RequestBody @Valid UserDto userDto) {
-    	return conversionService.convert(userService.update(convertAndEncodePassword(userDto)), UserDto.class);
+    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+        try {
+            System.out.println("Received update request for ID: " + id);
+
+            // Encuentra el usuario existente
+            Optional<User> existingUserOptional = userService.findById(id);
+            if (!existingUserOptional.isPresent()) {
+                System.out.println("User not found for ID: " + id);
+                return ResponseEntity.notFound().build();
+            }
+
+            User existingUser = existingUserOptional.get();
+
+            // Actualiza los campos del usuario existente con los datos del UserDto
+            existingUser.setUsername(userDto.getUsername());
+            existingUser.setPasswd(userDto.getPasswd());
+            existingUser.setName(userDto.getName());
+            existingUser.setDni(userDto.getDni());
+            existingUser.setEmail(userDto.getEmail());
+            existingUser.setAge(userDto.getAge());
+            existingUser.setRole(userDto.getRole());
+
+            // Guarda el usuario actualizado
+            User updatedUser = userService.save(existingUser);
+            UserDto updatedUserDto = conversionService.convert(updatedUser, UserDto.class);
+
+            return ResponseEntity.ok(updatedUserDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 	
     @Operation(summary = "Delete a user by id")
     @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json") }, description = "User deleted ok")
     @DeleteMapping("/delete/by/id/{id}")
-    public void deleteById(@PathVariable("id") @NotBlank Long id) {
+    public void deleteById(@PathVariable("id") @NotNull Long id) {
         userService.deleteById(id);
     }
     
@@ -142,13 +186,13 @@ public class UserController {
         userService.deleteByUsername(username);
     }
     
-	private User convertAndEncodePassword(UserDto userDto) {
+	private User convertAndEncodePassword(User user) {
 
-		String rawPassword = userDto.getPasswd();
+		String rawPassword = user.getPasswd();
 		if (rawPassword != null) {
-			userDto.setPasswd(passwordEncoder.encode(rawPassword));
+			user.setPasswd(passwordEncoder.encode(rawPassword));
 		}
-		return conversionService.convert(userDto, User.class);
+		return user;
 	}
 
 }

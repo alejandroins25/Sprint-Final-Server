@@ -1,6 +1,7 @@
 package cat.institutmarianao.gymwebserver.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import cat.institutmarianao.gymwebserver.model.User;
 import cat.institutmarianao.gymwebserver.model.User.Role;
@@ -14,11 +15,15 @@ public interface UserService {
 
 	User save(@NotNull @Valid User user);
 
-	User update(@NotNull @Valid User user);
+	//User update(@NotNull @Valid User user);
+	
+	Optional<User> updateUser(@NotNull @Valid User user);
+	
+	Optional<User> findById(@NotNull @Valid Long id);
 
-	User getById(@NotBlank Long id);
+	User getById(@NotNull Long id);
 
-	void deleteById(@NotBlank Long id);
+	void deleteById(@NotNull Long id);
 	
 	void deleteByUsername(@NotBlank String username);
 

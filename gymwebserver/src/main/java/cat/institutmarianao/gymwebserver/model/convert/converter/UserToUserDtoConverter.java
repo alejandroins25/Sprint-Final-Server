@@ -15,35 +15,20 @@ import cat.institutmarianao.gymwebserver.model.dto.UserDto;
 
 @Component
 public class UserToUserDtoConverter implements Converter<User, UserDto> {
-	
-	@Override
-	public UserDto convert(User user) {
-		if (user instanceof Responsable responsable) {
-			ResponsableDto responsableDto = new ResponsableDto();
 
-			copyCommonProperties(responsable, responsableDto);
-
-			return responsableDto;
-		}
-		if (user instanceof Monitor monitor) {
-			MonitorDto monitorDto = new MonitorDto();
-
-			copyCommonProperties(monitor, monitorDto);
-
-			return monitorDto;
-		}
-		if (user instanceof Cliente cliente) {
-			ClienteDto clienteDto = new ClienteDto();
-
-			copyCommonProperties(cliente, clienteDto);
-
-
-			return clienteDto;
-		}
-		return null;
-	}
-
-	private void copyCommonProperties(User user, UserDto userDto) {
-		BeanUtils.copyProperties(user, userDto);
-	}
+    @Override
+    public UserDto convert(User user) {
+        UserDto userDto = null;
+        if (user instanceof Responsable) {
+            userDto = new ResponsableDto();
+        } else if (user instanceof Monitor) {
+            userDto = new MonitorDto();
+        } else if (user instanceof Cliente) {
+            userDto = new ClienteDto();
+        }
+        if (userDto != null) {
+            BeanUtils.copyProperties(user, userDto);
+        }
+        return userDto;
+    }
 }

@@ -25,6 +25,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 @Tag(name = "Clase", description = "ClaseController API")
@@ -59,9 +60,9 @@ public class ClaseController {
             @Content(mediaType = "application/json", schema = @Schema(implementation = ClaseDto.class)) }, description = "Class retrieved ok")
     @ApiResponse(responseCode = "404", content = {
             @Content(mediaType = "application/json") }, description = "Class not found")
-    @GetMapping("/get/by/id/{classId}")
-    public ClaseDto findById(@PathVariable("classId") @Positive Long classId) {
-        Clase clase = claseService.getById(classId);
+    @GetMapping("/get/by/id/{id}")
+    public ClaseDto findById(@PathVariable("id")@NotNull @Positive Long id) {
+        Clase clase = claseService.getById(id);
         return conversionService.convert(clase, ClaseDto.class);
     }
 
@@ -71,16 +72,16 @@ public class ClaseController {
     @PostMapping("/save")
     public ClaseDto save(
             @Parameter(schema = @Schema(implementation = ClaseDto.class)) @RequestBody @Valid ClaseDto claseDto) {
-        Clase clase = conversionService.convert(claseDto, Clase.class);
-        Clase savedClase = claseService.save(clase);
-        return conversionService.convert(savedClase, ClaseDto.class);
+    	Clase clase = conversionService.convert(claseDto, Clase.class);
+    	Clase savedClase = claseService.save(clase);
+    	return conversionService.convert(savedClase, ClaseDto.class);
     }
 
     @Operation(summary = "Delete a class")
     @ApiResponse(responseCode = "200", content = {
             @Content(mediaType = "application/json") }, description = "Class deleted ok")
-    @DeleteMapping("/delete/by/id/{classId}")
-    public void deleteById(@PathVariable("classId") @Positive Long classId) {
-        claseService.deleteById(classId);
+    @DeleteMapping("/delete/by/id/{id}")
+    public void deleteById(@PathVariable("id")@NotNull @Positive Long id) {
+        claseService.deleteById(id);
     }
 }

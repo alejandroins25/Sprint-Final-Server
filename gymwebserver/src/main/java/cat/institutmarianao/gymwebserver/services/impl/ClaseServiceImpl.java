@@ -11,7 +11,7 @@ import cat.institutmarianao.gymwebserver.model.Clase;
 import cat.institutmarianao.gymwebserver.repositories.ClaseRepository;
 import cat.institutmarianao.gymwebserver.services.ClaseService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 @Validated
@@ -27,7 +27,7 @@ public class ClaseServiceImpl implements ClaseService {
     }
 
     @Override
-    public Clase getById(@Positive Long id) {
+    public Clase getById(@NotNull @Positive Long id) {
         return claseRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
@@ -37,7 +37,9 @@ public class ClaseServiceImpl implements ClaseService {
     }
 
     @Override
-    public void deleteById(@NotBlank Long id) {
-        claseRepository.deleteById(id);
+    public void deleteById(@NotNull @Positive Long id) {
+    	Clase clase = claseRepository.findById(id).orElseThrow(NotFoundException::new);
+        claseRepository.delete(clase);
+        //claseRepository.deleteById(id);
     }
 }
