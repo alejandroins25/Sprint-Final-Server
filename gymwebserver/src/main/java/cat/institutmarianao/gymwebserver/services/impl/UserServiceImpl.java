@@ -11,9 +11,11 @@ import org.springframework.validation.annotation.Validated;
 
 import cat.institutmarianao.gymwebserver.exception.NotFoundException;
 import cat.institutmarianao.gymwebserver.model.Clase;
+import cat.institutmarianao.gymwebserver.model.Reserva;
 import cat.institutmarianao.gymwebserver.model.User;
 import cat.institutmarianao.gymwebserver.model.User.Role;
 import cat.institutmarianao.gymwebserver.repositories.ClaseRepository;
+import cat.institutmarianao.gymwebserver.repositories.ReservaRepository;
 import cat.institutmarianao.gymwebserver.repositories.UserRepository;
 import cat.institutmarianao.gymwebserver.services.UserService;
 import cat.institutmarianao.gymwebserver.specifications.UserWithDni;
@@ -33,6 +35,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
     private ClaseRepository claseRepository;
+	
+	@Autowired
+	private ReservaRepository reservaRepository;
 	
 	@Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -87,30 +92,41 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public void deleteById(@NotNull Long id) {
-		User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException());
-        // Establecer el valor del monitor a null en las clases que lo referencian
-        List<Clase> classes = claseRepository.findByMonitor(user);
-        for (Clase clase : classes) {
-            clase.setMonitor(null);
-            claseRepository.save(clase);
-        }
-		userRepository.deleteById(id);
+	    User user = userRepository.findById(id)
+	            .orElseThrow(() -> new NotFoundException());
+	    List<Clase> classes = claseRepository.findByMonitor(user);
+
+	    for (Clase clase : classes) {
+	        clase.setMonitor(null);
+	        claseRepository.save(clase); // Esto guarda cada clase individualmente
+	    }
+	    List<Reserva> reservas = reservaRepository.findByUser(user);
+
+	    for (Reserva reserva : reservas) {
+	        reservaRepository.delete(reserva);
+	    }
+	    userRepository.deleteById(id);
 	}
+
 
 	@Override
 	@Transactional
-	public void deleteByUsername(@NotBlank String username) {	
+	public void deleteByUsername(@NotBlank String username) {
+		
 		User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new NotFoundException());
-        // Establecer el valor del monitor a null en las clases que lo referencian
-        List<Clase> classes = claseRepository.findByMonitor(user);
-        for (Clase clase : classes) {
-            clase.setMonitor(null);
-            claseRepository.save(clase);
-        }
-        // Ahora eliminar el usuario
-        userRepository.deleteByUsername(username);
+	            .orElseThrow(() -> new NotFoundException());
+	    List<Clase> classes = claseRepository.findByMonitor(user);
+
+	    for (Clase clase : classes) {
+	        clase.setMonitor(null);
+	        claseRepository.save(clase); // Esto guarda cada clase individualmente
+	    }
+	    List<Reserva> reservas = reservaRepository.findByUser(user);
+
+	    for (Reserva reserva : reservas) {
+	        reservaRepository.delete(reserva);
+	    }
+	    userRepository.deleteByUsername(username);
     }
 
 }

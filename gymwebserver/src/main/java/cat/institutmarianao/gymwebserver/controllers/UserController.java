@@ -175,7 +175,7 @@ public class UserController {
     @Operation(summary = "Delete a user by id")
     @ApiResponse(responseCode = "200", content = { @Content(mediaType = "application/json") }, description = "User deleted ok")
     @DeleteMapping("/delete/by/id/{id}")
-    public void deleteById(@PathVariable("id") @NotNull Long id) {
+    public void deleteById(@PathVariable("id") @NotNull @Valid Long id) {
         userService.deleteById(id);
     }
     
@@ -186,13 +186,13 @@ public class UserController {
         userService.deleteByUsername(username);
     }
     
-	private User convertAndEncodePassword(User user) {
+	/*private User convertAndEncodePassword(User user) {
 
 		String rawPassword = user.getPasswd();
 		if (rawPassword != null) {
 			user.setPasswd(passwordEncoder.encode(rawPassword));
 		}
 		return user;
-	}
+	}*/
 
 }
